@@ -3,27 +3,41 @@ const ENTREPRISE_ID = 'cc0bec95-bcf1-46ac-a364-dc63bb22a2e5';
 const TOTAL_INVESTI = 1310;
 const PCT_STEFI     = 0.50;
 const PCT_NATAILA   = 0.50;
-const PERIODE_DEBUT = '13 juin 2026';
-const PERIODE_FIN   = '19 juillet 2026';
+const ADMIN_PIN     = '1379';
 
 // ── State ────────────────────────────────────────────────────────
 let depenses = [];
 let recettes = [];
 let modalCallback = null;
+let isAdmin = false;
 
 // ── Formatage ────────────────────────────────────────────────────
 const fmt = (n) => '$' + Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const fmtDate = (iso) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+};
 const pct = (a, b) => b === 0 ? 0 : Math.min(100, (a / b) * 100);
 
 // ── Init ─────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', async () => {
+  // Date par défaut
   const dateInput = document.getElementById('rec-date');
   if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
 
+  // Nav
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
+  // Vérifier session admin
+  if (sessionStorage.getItem('admin') === ADMIN_PIN) {
+    isAdmin = true;
+  }
+  updateAdminUI();
+
+  // Splash
   setTimeout(() => {
     document.getElementById('splash').style.opacity = '0';
     setTimeout(() => {
@@ -34,6 +48,50 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   await chargerDonnees();
 });
+
+// ── Admin ─────────────────────────────────────────────────────────
+function showPinModal() {
+  document.getElementById('pin-modal').classList.remove('hidden');
+  document.getElementById('pin-input').value = '';
+  setTimeout(() => document.getElementById('pin-input').focus(), 100);
+}
+
+function closePinModal() {
+  document.getElementById('pin-modal').classList.add('hidden');
+}
+
+function verifierPin() {
+  const val = document.getElementById('pin-input').value.trim();
+  if (val === ADMIN_PIN) {
+    isAdmin = true;
+    sessionStorage.setItem('admin', ADMIN_PIN);
+    closePinModal();
+    updateAdminUI();
+    toast('🔓 Mode admin activé');
+  } else {
+    document.getElementById('pin-error').classList.remove('hidden');
+    document.getElementById('pin-input').value = '';
+  }
+}
+
+function deconnecterAdmin() {
+  isAdmin = false;
+  sessionStorage.removeItem('admin');
+  updateAdminUI();
+  toast('🔒 Déconnecté');
+}
+
+function updateAdminUI() {
+  // Boutons admin (ajouter/supprimer)
+  document.querySelectorAll('.admin-only').forEach(el => {
+    el.style.display = isAdmin ? '' : 'none';
+  });
+  // Bouton login/logout header
+  const loginBtn  = document.getElementById('btn-login');
+  const logoutBtn = document.getElementById('btn-logout');
+  if (loginBtn)  loginBtn.style.display  = isAdmin ? 'none' : '';
+  if (logoutBtn) logoutBtn.style.display = isAdmin ? '' : 'none';
+}
 
 // ── Navigation ───────────────────────────────────────────────────
 function switchTab(tabId) {
@@ -65,9 +123,9 @@ function rafraichir() {
   const totalRec = recettes.reduce((s, r) => s + Number(r.montant), 0);
   const benefice = totalRec - totalDep;
   const reste    = Math.max(0, totalDep - totalRec);
-
-  // ── Dashboard ──────────────────────────────────────────────────
   const colorBen = benefice >= 0 ? '#16A34A' : '#DC2626';
+
+  // ── Dashboard ─────────────────────────────────────────────────
   set('db-benefice',     fmt(benefice), colorBen);
   set('db-recettes',     fmt(totalRec));
   set('db-depenses',     fmt(totalDep));
@@ -79,7 +137,6 @@ function rafraichir() {
   const prog = document.getElementById('db-progress');
   if (prog) prog.style.width = pct(totalRec, totalDep).toFixed(1) + '%';
 
-  // Dernières recettes
   const recEl = document.getElementById('db-dernieres-recettes');
   if (recEl) {
     if (recettes.length === 0) {
@@ -89,14 +146,14 @@ function rafraichir() {
         <div class="list-item">
           <div>
             <div class="list-label">${r.label}</div>
-            <div class="list-date">${r.date || ''}</div>
+            <div class="list-date">${fmtDate(r.created_at)}</div>
           </div>
           <div class="amount green">+${fmt(r.montant)}</div>
         </div>`).join('');
     }
   }
 
-  // ── Dépenses ───────────────────────────────────────────────────
+  // ── Dépenses ──────────────────────────────────────────────────
   set('dep-total', fmt(totalDep));
   const depList = document.getElementById('dep-list');
   if (depList) {
@@ -106,25 +163,28 @@ function rafraichir() {
       depList.innerHTML = `
         <table class="data-table">
           <thead>
-            <tr><th>#</th><th>Description</th><th>Montant</th><th></th></tr>
+            <tr><th>#</th><th>Description</th><th>Date & Heure</th><th>Montant</th><th class="admin-only"></th></tr>
           </thead>
           <tbody>
             ${depenses.map((d, i) => `
               <tr>
                 <td class="num-col">${i + 1}</td>
                 <td>${d.label}</td>
+                <td class="date-col">${fmtDate(d.created_at)}</td>
                 <td class="amount red">${fmt(d.montant)}</td>
-                <td><button class="btn btn-sm btn-del" onclick="confirmerSupp('dep','${d.id}')">✕</button></td>
+                <td class="admin-only">
+                  <button class="btn btn-sm btn-del" onclick="confirmerSupp('dep','${d.id}')">✕</button>
+                </td>
               </tr>`).join('')}
           </tbody>
           <tfoot>
-            <tr><td colspan="2"><strong>TOTAL</strong></td><td class="amount red"><strong>${fmt(totalDep)}</strong></td><td></td></tr>
+            <tr><td colspan="3"><strong>TOTAL</strong></td><td class="amount red"><strong>${fmt(totalDep)}</strong></td><td></td></tr>
           </tfoot>
         </table>`;
     }
   }
 
-  // ── Recettes ───────────────────────────────────────────────────
+  // ── Recettes ──────────────────────────────────────────────────
   set('rec-total', fmt(totalRec));
   const recList = document.getElementById('rec-list');
   if (recList) {
@@ -134,16 +194,18 @@ function rafraichir() {
       recList.innerHTML = `
         <table class="data-table">
           <thead>
-            <tr><th>#</th><th>Description</th><th>Date</th><th>Montant</th><th></th></tr>
+            <tr><th>#</th><th>Description</th><th>Date & Heure</th><th>Montant</th><th class="admin-only"></th></tr>
           </thead>
           <tbody>
             ${[...recettes].reverse().map((r, i) => `
               <tr>
                 <td class="num-col">${i + 1}</td>
                 <td>${r.label}</td>
-                <td class="date-col">${r.date || ''}</td>
+                <td class="date-col">${fmtDate(r.created_at)}</td>
                 <td class="amount green">+${fmt(r.montant)}</td>
-                <td><button class="btn btn-sm btn-del" onclick="confirmerSupp('rec','${r.id}')">✕</button></td>
+                <td class="admin-only">
+                  <button class="btn btn-sm btn-del" onclick="confirmerSupp('rec','${r.id}')">✕</button>
+                </td>
               </tr>`).join('')}
           </tbody>
           <tfoot>
@@ -153,7 +215,7 @@ function rafraichir() {
     }
   }
 
-  // ── Répartition ────────────────────────────────────────────────
+  // ── Répartition ───────────────────────────────────────────────
   const partStefi   = benefice > 0 ? benefice * PCT_STEFI   : 0;
   const partNataila = benefice > 0 ? benefice * PCT_NATAILA : 0;
 
@@ -170,47 +232,50 @@ function rafraichir() {
     set('rep-benefice', fmt(benefice));
   }
 
-  set('rep-part-stefi',   fmt(partStefi),   benefice > 0 ? '#16A34A' : '#94A3B8');
-  set('rep-part-nataila', fmt(partNataila),  benefice > 0 ? '#16A34A' : '#94A3B8');
+  const repTable = document.getElementById('rep-table');
+  if (repTable) {
+    repTable.innerHTML = `
+      <div class="card">
+        <table class="data-table">
+          <thead>
+            <tr><th>Associé</th><th>Part</th><th>Cash investi</th><th>Bénéfice</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>👫 Steve & Figeline</td>
+              <td><span class="badge badge-blue">50%</span></td>
+              <td class="amount blue">$410.00</td>
+              <td class="amount ${benefice > 0 ? 'green' : ''}">${fmt(partStefi)}</td>
+            </tr>
+            <tr>
+              <td>👩 Nataïla</td>
+              <td><span class="badge badge-green">50%</span></td>
+              <td class="amount green">$900.00</td>
+              <td class="amount ${benefice > 0 ? 'green' : ''}">${fmt(partNataila)}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3"><strong>Bénéfice net total</strong></td>
+              <td class="amount" style="color:${colorBen}"><strong>${fmt(benefice)}</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>`;
+  }
+
   set('rep-investi',  fmt(TOTAL_INVESTI));
   set('rep-depenses', fmt(totalDep));
   set('rep-recettes', fmt(totalRec));
   set('rep-net',      fmt(benefice), colorBen);
 
-  // Tableau répartition
-  const repTable = document.getElementById('rep-table');
-  if (repTable) {
-    repTable.innerHTML = `
-      <table class="data-table">
-        <thead>
-          <tr><th>Associé</th><th>Part</th><th>Cash investi</th><th>Bénéfice</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>👫 Steve & Figeline</td>
-            <td><span class="badge badge-blue">50%</span></td>
-            <td class="amount blue">$410.00</td>
-            <td class="amount ${benefice > 0 ? 'green' : ''}">${fmt(partStefi)}</td>
-          </tr>
-          <tr>
-            <td>👩 Nataïla</td>
-            <td><span class="badge badge-green">50%</span></td>
-            <td class="amount green">$900.00</td>
-            <td class="amount ${benefice > 0 ? 'green' : ''}">${fmt(partNataila)}</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3"><strong>Bénéfice net total</strong></td>
-            <td class="amount" style="color:${colorBen}"><strong>${fmt(benefice)}</strong></td>
-          </tr>
-        </tfoot>
-      </table>`;
-  }
+  // Refresh admin UI après rendu
+  updateAdminUI();
 }
 
 // ── Ajouter dépense ──────────────────────────────────────────────
 async function ajouterDepense() {
+  if (!isAdmin) { showPinModal(); return; }
   const label   = document.getElementById('dep-label')?.value.trim();
   const montant = parseFloat(document.getElementById('dep-montant')?.value);
   if (!label || isNaN(montant) || montant <= 0) { toast('⚠️ Remplis tous les champs'); return; }
@@ -218,7 +283,7 @@ async function ajouterDepense() {
   setSyncing(true);
   try {
     const res = await db.insert('depenses', { entreprise_id: ENTREPRISE_ID, label, montant });
-    depenses.push(res[0] || { id: Date.now(), label, montant });
+    depenses.push(res[0] || { id: Date.now(), label, montant, created_at: new Date().toISOString() });
     document.getElementById('dep-label').value   = '';
     document.getElementById('dep-montant').value = '';
     toggleForm('form-depense');
@@ -230,6 +295,7 @@ async function ajouterDepense() {
 
 // ── Ajouter recette ──────────────────────────────────────────────
 async function ajouterRecette() {
+  if (!isAdmin) { showPinModal(); return; }
   const label   = document.getElementById('rec-label')?.value.trim();
   const montant = parseFloat(document.getElementById('rec-montant')?.value);
   const date    = document.getElementById('rec-date')?.value;
@@ -238,7 +304,7 @@ async function ajouterRecette() {
   setSyncing(true);
   try {
     const res = await db.insert('recettes', { entreprise_id: ENTREPRISE_ID, label, montant, date });
-    recettes.push(res[0] || { id: Date.now(), label, montant, date });
+    recettes.push(res[0] || { id: Date.now(), label, montant, date, created_at: new Date().toISOString() });
     document.getElementById('rec-label').value   = '';
     document.getElementById('rec-montant').value = '';
     toggleForm('form-recette');
@@ -250,6 +316,7 @@ async function ajouterRecette() {
 
 // ── Suppression ──────────────────────────────────────────────────
 function confirmerSupp(type, id) {
+  if (!isAdmin) { toast('🔒 Accès admin requis'); return; }
   modalCallback = async () => {
     setSyncing(true);
     try {
@@ -273,6 +340,7 @@ function closeModal() {
 
 // ── UI Helpers ───────────────────────────────────────────────────
 function toggleForm(id) {
+  if (!isAdmin) { showPinModal(); return; }
   document.getElementById(id)?.classList.toggle('hidden');
 }
 
@@ -296,3 +364,10 @@ function toast(msg) {
   clearTimeout(el._t);
   el._t = setTimeout(() => el.classList.add('hidden'), 2800);
 }
+
+// PIN Enter key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !document.getElementById('pin-modal').classList.contains('hidden')) {
+    verifierPin();
+  }
+});

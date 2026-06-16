@@ -239,3 +239,11 @@ html, body { height: 100%; font-family: 'Segoe UI', Arial, sans-serif; backgroun
 
 /* ── ALERT GREEN ── */
 .alert-green { background: #F0FDF4; border-color: #86EFAC; color: #14532D; }
+
+/* ── HEADER RIGHT ── */
+.header-right { display: flex; align-items: center; gap: 8px; }
+.btn-icon { background: rgba(255,255,255,0.2); border: none; border-radius: 8px; padding: 6px 10px; font-size: 16px; cursor: pointer; color: white; transition: background 0.2s; }
+.btn-icon:hover { background: rgba(255,255,255,0.3); }
+
+/* ── PIN MODAL ── */
+.pin-error { color: #DC2626; font-size: 13px; margin-top: 6px; font-weight: 600; }
