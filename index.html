@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SteFi Salon – Pression STOP</title>
+  <meta name="description" content="Gestion des comptes SteFi Salon" />
+  <meta name="theme-color" content="#2563EB" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+</head>
+<body>
+
+  <!-- SPLASH -->
+  <div id="splash">
+    <div class="splash-logo">
+      <div class="splash-icon">🧊</div>
+      <div class="splash-name">SteFi Salon</div>
+      <div class="splash-sub">Pression STOP</div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="hidden">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <span class="header-icon">🧊</span>
+        <div>
+          <div class="header-title">SteFi Salon</div>
+          <div class="header-sub">Pression STOP</div>
+        </div>
+      </div>
+      <div class="header-sync" id="syncStatus" title="Synchronisation">⟳</div>
+    </header>
+
+    <!-- NAV -->
+    <nav class="nav">
+      <button class="nav-btn active" data-tab="dashboard">🏠 Tableau</button>
+      <button class="nav-btn" data-tab="apports">💰 Apports</button>
+      <button class="nav-btn" data-tab="depenses">📦 Dépenses</button>
+      <button class="nav-btn" data-tab="recettes">💵 Recettes</button>
+      <button class="nav-btn" data-tab="repartition">📊 Répartition</button>
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="main">
+
+      <!-- DASHBOARD -->
+      <section id="tab-dashboard" class="tab active">
+        <h2 class="section-title">Vue générale</h2>
+
+        <div class="card card-hero">
+          <div class="card-label">Bénéfice net</div>
+          <div class="big-num" id="db-benefice">$0.00</div>
+          <div class="card-hint">Recettes − Dépenses totales</div>
+        </div>
+
+        <div class="grid2">
+          <div class="stat-card blue">
+            <div class="stat-num" id="db-recettes">$0.00</div>
+            <div class="stat-label">Total encaissé</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-num" id="db-depenses">$0.00</div>
+            <div class="stat-label">Total dépenses</div>
+          </div>
+          <div class="stat-card yellow">
+            <div class="stat-num" id="db-investi">$1,310.00</div>
+            <div class="stat-label">Total investi</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-num" id="db-reste">$0.00</div>
+            <div class="stat-label">Reste à récupérer</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Récupération de l'investissement</div>
+          <div class="progress-header">
+            <span id="db-recupere-txt">$0.00 récupéré</span>
+            <span id="db-recupere-pct" class="pct-badge">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill blue" id="db-progress" style="width:0%"></div>
+          </div>
+          <div class="progress-hint">Objectif : <span id="db-objectif">$1,310.00</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Dernières entrées</div>
+          <div id="db-dernières-recettes"><div class="empty">Aucune recette encore.</div></div>
+          <button class="btn btn-blue btn-full mt-12" onclick="switchTab('recettes')">Voir toutes les recettes</button>
+        </div>
+      </section>
+
+      <!-- APPORTS -->
+      <section id="tab-apports" class="tab hidden">
+        <h2 class="section-title">Apports de départ</h2>
+
+        <div class="alert alert-yellow">
+          💡 Total investi : <strong>$1,310.00</strong>
+        </div>
+
+        <div class="card">
+          <div class="card-header-row">
+            <div class="section-title">👫 Steve & Figeline</div>
+            <span class="badge badge-blue">31.3%</span>
+          </div>
+          <div class="list-item">
+            <span>💵 Cash investi</span>
+            <span class="amount blue">$410.00</span>
+          </div>
+          <div class="nature-label">Apports en nature</div>
+          <div class="nature-list">
+            <div class="nature-item"><span class="check blue">✓</span> Local</div>
+            <div class="nature-item"><span class="check blue">✓</span> Igloo</div>
+            <div class="nature-item"><span class="check blue">✓</span> Table</div>
+            <div class="nature-item"><span class="check blue">✓</span> Réchaud + Gaz</div>
+            <div class="nature-item"><span class="check blue">✓</span> Logistique générale</div>
+          </div>
+          <div class="progress-bar mt-8">
+            <div class="progress-fill blue" style="width:31.3%"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header-row">
+            <div class="section-title">👩 Nataïla</div>
+            <span class="badge badge-green">68.7%</span>
+          </div>
+          <div class="list-item">
+            <span>💵 Cash investi</span>
+            <span class="amount green">$900.00</span>
+          </div>
+          <div class="nature-label">Apports en nature</div>
+          <div class="nature-list">
+            <div class="nature-item"><span class="check green">✓</span> Savoir-faire sirops</div>
+            <div class="nature-item"><span class="check green">✓</span> Vente Fresco</div>
+          </div>
+          <div class="progress-bar mt-8">
+            <div class="progress-fill green" style="width:68.7%"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DÉPENSES -->
+      <section id="tab-depenses" class="tab hidden">
+        <div class="tab-header">
+          <h2 class="section-title">Dépenses</h2>
+          <button class="btn btn-blue" onclick="toggleForm('form-depense')">+ Ajouter</button>
+        </div>
+
+        <div class="form-card hidden" id="form-depense">
+          <div class="card-label">Nouvelle dépense</div>
+          <input class="input" id="dep-label" placeholder="Description (ex: Glas)" />
+          <input class="input" id="dep-montant" type="number" placeholder="Montant ($)" />
+          <div class="btn-row">
+            <button class="btn btn-green flex1" onclick="ajouterDepense()">Enregistrer</button>
+            <button class="btn btn-gray flex1" onclick="toggleForm('form-depense')">Annuler</button>
+          </div>
+        </div>
+
+        <div class="card card-red-light">
+          <div class="card-label">Total dépenses</div>
+          <div class="big-num red" id="dep-total">$0.00</div>
+        </div>
+
+        <div class="card" id="dep-list">
+          <div class="empty">Chargement...</div>
+        </div>
+      </section>
+
+      <!-- RECETTES -->
+      <section id="tab-recettes" class="tab hidden">
+        <div class="tab-header">
+          <h2 class="section-title">Recettes</h2>
+          <button class="btn btn-green" onclick="toggleForm('form-recette')">+ Ajouter</button>
+        </div>
+
+        <div class="form-card hidden" id="form-recette">
+          <div class="card-label">Nouvelle recette</div>
+          <input class="input" id="rec-label" placeholder="Description (ex: Jour 2)" />
+          <input class="input" id="rec-montant" type="number" placeholder="Montant ($)" />
+          <input class="input" id="rec-date" type="date" />
+          <div class="btn-row">
+            <button class="btn btn-green flex1" onclick="ajouterRecette()">Enregistrer</button>
+            <button class="btn btn-gray flex1" onclick="toggleForm('form-recette')">Annuler</button>
+          </div>
+        </div>
+
+        <div class="card card-green-light">
+          <div class="card-label">Total encaissé</div>
+          <div class="big-num green" id="rec-total">$0.00</div>
+        </div>
+
+        <div class="card" id="rec-list">
+          <div class="empty">Chargement...</div>
+        </div>
+      </section>
+
+      <!-- RÉPARTITION -->
+      <section id="tab-repartition" class="tab hidden">
+        <h2 class="section-title">Répartition des bénéfices</h2>
+
+        <div class="alert hidden" id="rep-alert-neg" style="background:#FEF3C7;border-color:#FCD34D;color:#92400E;">
+          ⚠️ Pas encore de bénéfice à répartir.<br>
+          <span id="rep-reste-txt"></span>
+        </div>
+        <div class="alert hidden" id="rep-alert-pos" style="background:#F0FDF4;border-color:#86EFAC;color:#14532D;">
+          ✅ Bénéfice net à répartir : <strong id="rep-benefice">$0.00</strong>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Parts selon les apports cash</div>
+          <div class="rep-bar">
+            <div class="rep-bar-stefi">31.3%</div>
+            <div class="rep-bar-nataila">68.7%</div>
+          </div>
+          <div class="rep-legend">
+            <div class="legend-item"><div class="legend-dot blue"></div> Steve & Figeline</div>
+            <div class="legend-item"><div class="legend-dot green"></div> Nataïla</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="list-item">
+            <div>
+              <div class="amount blue">👫 Steve & Figeline</div>
+              <div class="hint">31.3% · Cash : $410.00</div>
+            </div>
+            <div class="text-right">
+              <div class="amount green" id="rep-part-stefi">$0.00</div>
+              <div class="hint">part bénéfice</div>
+            </div>
+          </div>
+          <div class="list-item">
+            <div>
+              <div class="amount green">👩 Nataïla</div>
+              <div class="hint">68.7% · Cash : $900.00</div>
+            </div>
+            <div class="text-right">
+              <div class="amount green" id="rep-part-nataila">$0.00</div>
+              <div class="hint">part bénéfice</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Résumé complet</div>
+          <div class="list-item"><span>Total investi</span><span class="amount yellow" id="rep-investi">$1,310.00</span></div>
+          <div class="list-item"><span>Total dépenses</span><span class="amount red" id="rep-depenses">$0.00</span></div>
+          <div class="list-item"><span>Total encaissé</span><span class="amount blue" id="rep-recettes">$0.00</span></div>
+          <div class="list-item"><span>Bénéfice net</span><span class="amount" id="rep-net">$0.00</span></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <div class="modal-title">Supprimer cet élément ?</div>
+      <div class="modal-sub">Cette action est irréversible.</div>
+      <div class="btn-row mt-12">
+        <button class="btn btn-red flex1" id="modal-confirm">Supprimer</button>
+        <button class="btn btn-gray flex1" onclick="closeModal()">Annuler</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="js/supabase.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>
