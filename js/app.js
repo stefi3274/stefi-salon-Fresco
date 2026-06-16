@@ -1,8 +1,10 @@
 // ── Config ───────────────────────────────────────────────────────
 const ENTREPRISE_ID = 'cc0bec95-bcf1-46ac-a364-dc63bb22a2e5';
 const TOTAL_INVESTI = 1310;
-const PCT_STEFI     = 0.313;
-const PCT_NATAILA   = 0.687;
+const PCT_STEFI     = 0.50;
+const PCT_NATAILA   = 0.50;
+const PERIODE_DEBUT = '13 juin 2026';
+const PERIODE_FIN   = '19 juillet 2026';
 
 // ── State ────────────────────────────────────────────────────────
 let depenses = [];
@@ -15,16 +17,13 @@ const pct = (a, b) => b === 0 ? 0 : Math.min(100, (a / b) * 100);
 
 // ── Init ─────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', async () => {
-  // Date par défaut
   const dateInput = document.getElementById('rec-date');
   if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
 
-  // Nav
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
-  // Splash
   setTimeout(() => {
     document.getElementById('splash').style.opacity = '0';
     setTimeout(() => {
@@ -67,21 +66,21 @@ function rafraichir() {
   const benefice = totalRec - totalDep;
   const reste    = Math.max(0, totalDep - totalRec);
 
-  // Dashboard
+  // ── Dashboard ──────────────────────────────────────────────────
   const colorBen = benefice >= 0 ? '#16A34A' : '#DC2626';
-  set('db-benefice',      fmt(benefice), colorBen);
-  set('db-recettes',      fmt(totalRec));
-  set('db-depenses',      fmt(totalDep));
-  set('db-investi',       fmt(TOTAL_INVESTI));
-  set('db-reste',         fmt(reste));
-  set('db-recupere-txt',  fmt(totalRec) + ' récupéré');
-  set('db-recupere-pct',  pct(totalRec, totalDep).toFixed(1) + '%');
-  set('db-objectif',      fmt(totalDep));
+  set('db-benefice',     fmt(benefice), colorBen);
+  set('db-recettes',     fmt(totalRec));
+  set('db-depenses',     fmt(totalDep));
+  set('db-investi',      fmt(TOTAL_INVESTI));
+  set('db-reste',        fmt(reste));
+  set('db-recupere-txt', fmt(totalRec) + ' récupéré');
+  set('db-recupere-pct', pct(totalRec, totalDep).toFixed(1) + '%');
+  set('db-objectif',     fmt(totalDep));
   const prog = document.getElementById('db-progress');
   if (prog) prog.style.width = pct(totalRec, totalDep).toFixed(1) + '%';
 
-  // Dernières recettes dashboard
-  const recEl = document.getElementById('db-dernières-recettes');
+  // Dernières recettes
+  const recEl = document.getElementById('db-dernieres-recettes');
   if (recEl) {
     if (recettes.length === 0) {
       recEl.innerHTML = '<div class="empty">Aucune recette encore.</div>';
@@ -97,46 +96,64 @@ function rafraichir() {
     }
   }
 
-  // Dépenses list
+  // ── Dépenses ───────────────────────────────────────────────────
   set('dep-total', fmt(totalDep));
   const depList = document.getElementById('dep-list');
   if (depList) {
     if (depenses.length === 0) {
       depList.innerHTML = '<div class="empty">Aucune dépense enregistrée.</div>';
     } else {
-      depList.innerHTML = depenses.map(d => `
-        <div class="list-item">
-          <span class="list-label">${d.label}</span>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span class="amount red">${fmt(d.montant)}</span>
-            <button class="btn btn-sm btn-del" onclick="confirmerSupp('dep','${d.id}')">✕</button>
-          </div>
-        </div>`).join('');
+      depList.innerHTML = `
+        <table class="data-table">
+          <thead>
+            <tr><th>#</th><th>Description</th><th>Montant</th><th></th></tr>
+          </thead>
+          <tbody>
+            ${depenses.map((d, i) => `
+              <tr>
+                <td class="num-col">${i + 1}</td>
+                <td>${d.label}</td>
+                <td class="amount red">${fmt(d.montant)}</td>
+                <td><button class="btn btn-sm btn-del" onclick="confirmerSupp('dep','${d.id}')">✕</button></td>
+              </tr>`).join('')}
+          </tbody>
+          <tfoot>
+            <tr><td colspan="2"><strong>TOTAL</strong></td><td class="amount red"><strong>${fmt(totalDep)}</strong></td><td></td></tr>
+          </tfoot>
+        </table>`;
     }
   }
 
-  // Recettes list
+  // ── Recettes ───────────────────────────────────────────────────
   set('rec-total', fmt(totalRec));
   const recList = document.getElementById('rec-list');
   if (recList) {
     if (recettes.length === 0) {
       recList.innerHTML = '<div class="empty">Aucune recette enregistrée.</div>';
     } else {
-      recList.innerHTML = [...recettes].reverse().map(r => `
-        <div class="list-item">
-          <div>
-            <div class="list-label">${r.label}</div>
-            <div class="list-date">${r.date || ''}</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span class="amount green">+${fmt(r.montant)}</span>
-            <button class="btn btn-sm btn-del" onclick="confirmerSupp('rec','${r.id}')">✕</button>
-          </div>
-        </div>`).join('');
+      recList.innerHTML = `
+        <table class="data-table">
+          <thead>
+            <tr><th>#</th><th>Description</th><th>Date</th><th>Montant</th><th></th></tr>
+          </thead>
+          <tbody>
+            ${[...recettes].reverse().map((r, i) => `
+              <tr>
+                <td class="num-col">${i + 1}</td>
+                <td>${r.label}</td>
+                <td class="date-col">${r.date || ''}</td>
+                <td class="amount green">+${fmt(r.montant)}</td>
+                <td><button class="btn btn-sm btn-del" onclick="confirmerSupp('rec','${r.id}')">✕</button></td>
+              </tr>`).join('')}
+          </tbody>
+          <tfoot>
+            <tr><td colspan="3"><strong>TOTAL</strong></td><td class="amount green"><strong>+${fmt(totalRec)}</strong></td><td></td></tr>
+          </tfoot>
+        </table>`;
     }
   }
 
-  // Répartition
+  // ── Répartition ────────────────────────────────────────────────
   const partStefi   = benefice > 0 ? benefice * PCT_STEFI   : 0;
   const partNataila = benefice > 0 ? benefice * PCT_NATAILA : 0;
 
@@ -159,6 +176,37 @@ function rafraichir() {
   set('rep-depenses', fmt(totalDep));
   set('rep-recettes', fmt(totalRec));
   set('rep-net',      fmt(benefice), colorBen);
+
+  // Tableau répartition
+  const repTable = document.getElementById('rep-table');
+  if (repTable) {
+    repTable.innerHTML = `
+      <table class="data-table">
+        <thead>
+          <tr><th>Associé</th><th>Part</th><th>Cash investi</th><th>Bénéfice</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>👫 Steve & Figeline</td>
+            <td><span class="badge badge-blue">50%</span></td>
+            <td class="amount blue">$410.00</td>
+            <td class="amount ${benefice > 0 ? 'green' : ''}">${fmt(partStefi)}</td>
+          </tr>
+          <tr>
+            <td>👩 Nataïla</td>
+            <td><span class="badge badge-green">50%</span></td>
+            <td class="amount green">$900.00</td>
+            <td class="amount ${benefice > 0 ? 'green' : ''}">${fmt(partNataila)}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3"><strong>Bénéfice net total</strong></td>
+            <td class="amount" style="color:${colorBen}"><strong>${fmt(benefice)}</strong></td>
+          </tr>
+        </tfoot>
+      </table>`;
+  }
 }
 
 // ── Ajouter dépense ──────────────────────────────────────────────
