@@ -142,12 +142,17 @@
       <section id="tab-depenses" class="tab hidden">
         <div class="tab-header">
           <h2 class="section-title">Dépenses</h2>
-          <button class="btn btn-blue admin-only" onclick="toggleForm('form-depense')">+ Dépense</button>
+          <button class="btn btn-blue" onclick="toggleForm('form-depense')">+ Dépense</button>
         </div>
 
         <div class="form-card hidden" id="form-depense">
           <div class="card-label">Nouvelle dépense</div>
-          <input class="input" id="dep-label" placeholder="Description (ex: Glas, Gazoline…)" />
+          <select class="input" id="dep-categorie">
+            <option value="">-- Choisir une catégorie --</option>
+          </select>
+          <div class="hidden" id="dep-preciser-wrap">
+            <input class="input" id="dep-preciser" placeholder="Précise la dépense…" />
+          </div>
           <input class="input" id="dep-montant" type="number" placeholder="Montant ($)" min="0" step="0.01" />
           <div class="btn-row">
             <button class="btn btn-green flex1" onclick="ajouterDepense()">✅ Enregistrer</button>
@@ -167,7 +172,7 @@
       <section id="tab-recettes" class="tab hidden">
         <div class="tab-header">
           <h2 class="section-title">Recettes</h2>
-          <button class="btn btn-green admin-only" onclick="toggleForm('form-recette')">+ Recette</button>
+          <button class="btn btn-green" onclick="toggleForm('form-recette')">+ Recette</button>
         </div>
 
         <div class="form-card hidden" id="form-recette">

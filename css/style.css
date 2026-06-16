@@ -247,3 +247,9 @@ html, body { height: 100%; font-family: 'Segoe UI', Arial, sans-serif; backgroun
 
 /* ── PIN MODAL ── */
 .pin-error { color: #DC2626; font-size: 13px; margin-top: 6px; font-weight: 600; }
+
+/* ── CATÉGORIES ── */
+.cat-header { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #2563EB; background: #EFF6FF; padding: 7px 10px; border-radius: 6px; margin: 12px 0 4px; display: flex; justify-content: space-between; }
+.cat-total  { color: #DC2626; font-weight: 700; }
+.total-bar  { text-align: right; font-weight: 800; font-size: 14px; padding: 12px 10px; border-top: 2px solid #E2E8F0; margin-top: 8px; }
+.total-bar.red { color: #DC2626; }
