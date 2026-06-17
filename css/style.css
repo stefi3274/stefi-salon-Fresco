@@ -253,3 +253,13 @@ html, body { height: 100%; font-family: 'Segoe UI', Arial, sans-serif; backgroun
 .cat-total  { color: #DC2626; font-weight: 700; }
 .total-bar  { text-align: right; font-weight: 800; font-size: 14px; padding: 12px 10px; border-top: 2px solid #E2E8F0; margin-top: 8px; }
 .total-bar.red { color: #DC2626; }
+
+.tab-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.btn {
+  display: inline-block !important;
+}
