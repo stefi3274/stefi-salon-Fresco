@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SteFi Salon – Pression STOP</title>
+<title>SteFi Salon – Mondyal Frechè</title>
+<meta name="theme-color" content="#2563EB"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;min-height:100vh}
@@ -91,8 +94,9 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;min-h
 .alert-yellow{background:#FFFBEB;border-color:#FDE68A;color:#78350F}
 .alert-green{background:#F0FDF4;border-color:#86EFAC;color:#14532D}
 .rep-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;margin-bottom:10px}
-.rep-bar-stefi{width:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700}
-.rep-bar-nataila{width:50%;background:#16A34A;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700}
+.rep-bar-steve{width:20%;background:#2563EB;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700}
+.rep-bar-fige{width:40%;background:#D97706;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700}
+.rep-bar-nataila{width:40%;background:#16A34A;display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700}
 .rep-legend{display:flex;gap:16px;margin-top:6px}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:#475569}
 .legend-dot{width:12px;height:12px;border-radius:3px}
@@ -121,7 +125,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;min-h
 </head>
 <body>
 
-<div id="splash"><div class="splash-inner"><div class="splash-icon">🧊</div><div class="splash-name">SteFi Salon</div><div class="splash-sub">Pression STOP · Coupe du Monde 2026</div></div></div>
+<div id="splash"><div class="splash-inner"><div class="splash-icon">🧊</div><div class="splash-name">SteFi Salon</div><div class="splash-sub">Mondyal Frechè · Coupe du Monde 2026</div></div></div>
 
 <div id="app" class="hidden">
   <header class="header">
@@ -132,7 +136,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;min-h
     <div class="header-right">
       <span id="syncStatus" style="font-size:20px;color:white">⟳</span>
       <button class="btn-icon" id="btn-login" onclick="showPinModal()">🔒</button>
-      <button class="btn-icon" id="btn-export" onclick="exporterCSV()" title="Télécharger">⬇️</button>
+      <button class="btn-icon" id="btn-export" onclick="installerApp()" title="Installer l'app">⬇️</button>
       <button class="btn-icon hidden" id="btn-logout" onclick="deconnecterAdmin()">🔓</button>
     </div>
   </header>
@@ -157,14 +161,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;min-h
       <div class="grid2">
         <div class="stat-card blue"><div class="stat-num" id="db-recettes">$0.00</div><div class="stat-label">Total encaissé</div></div>
         <div class="stat-card red"><div class="stat-num" id="db-depenses">$0.00</div><div class="stat-label">Total dépenses</div></div>
-        <div class="stat-card yellow"><div class="stat-num" id="db-investi">$1,310.00</div><div class="stat-label">Total investi</div></div>
+        <div class="stat-card yellow"><div class="stat-num" id="db-investi">$1,510.00</div><div class="stat-label">Total investi</div></div>
         <div class="stat-card green"><div class="stat-num" id="db-reste">$0.00</div><div class="stat-label">Reste à récupérer</div></div>
       </div>
       <div class="card">
         <div class="card-label">Récupération</div>
         <div class="progress-header"><span id="db-recupere-txt">$0.00 récupéré</span><span id="db-recupere-pct" class="pct-badge">0%</span></div>
         <div class="progress-bar"><div class="progress-fill blue" id="db-progress" style="width:0%"></div></div>
-        <div class="progress-hint">Objectif : <span id="db-objectif">$1,310.00</span></div>
+        <div class="progress-hint">Objectif : <span id="db-objectif">$1,510.00</span></div>
       </div>
       <div class="card">
         <div class="card-label">Dernières entrées</div>
@@ -175,26 +179,44 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;min-h
 
     <section id="tab-apports" class="tab">
       <h2 class="section-title" style="margin-bottom:12px">Apports de départ</h2>
-      <div class="alert alert-yellow">💡 Total investi : <strong>$1,310.00</strong> · Répartition : <strong>50% / 50%</strong></div>
+      <div class="alert alert-yellow">💡 Total investi cash : <strong>$1,510.00</strong> · Répartition : <strong>20% / 40% / 40%</strong></div>
       <div class="card">
-        <div class="card-header-row"><span style="font-size:15px;font-weight:800">👫 Steve & Figeline</span><span class="badge badge-blue">50%</span></div>
-        <div class="list-item"><span>💵 Cash investi</span><span class="amount blue">$410.00</span></div>
+        <div class="card-header-row"><span style="font-size:15px;font-weight:800">🧑 Steve</span><span class="badge badge-blue">20%</span></div>
+        <div class="list-item"><span>💵 Cash investi</span><span class="amount blue">$0.00</span></div>
         <div class="nature-label">Apports en nature</div>
-        <div class="nature-item"><span class="check-blue">✓</span> Local</div>
-        <div class="nature-item"><span class="check-blue">✓</span> Igloo</div>
-        <div class="nature-item"><span class="check-blue">✓</span> Table</div>
-        <div class="nature-item"><span class="check-blue">✓</span> Réchaud + Gaz</div>
-        <div class="nature-item"><span class="check-blue">✓</span> Logistique</div>
-        <div class="progress-bar mt-8"><div class="progress-fill blue" style="width:50%"></div></div>
+        <div class="nature-item"><span class="check-blue">✓</span> L'Application</div>
+        <div class="nature-item"><span class="check-blue">✓</span> Installation TV</div>
+        <div class="nature-item"><span class="check-blue">✓</span> Génératrice</div>
+        <div class="nature-item"><span class="check-blue">✓</span> Gaz</div>
+        <div class="nature-item"><span class="check-blue">✓</span> Logistique générale</div>
+        <div class="progress-bar mt-8"><div class="progress-fill blue" style="width:20%"></div></div>
       </div>
       <div class="card">
-        <div class="card-header-row"><span style="font-size:15px;font-weight:800">👩 Nataïla</span><span class="badge badge-green">50%</span></div>
+        <div class="card-header-row"><span style="font-size:15px;font-weight:800">👩 Fige</span><span class="badge badge-blue">40%</span></div>
+        <div class="list-item"><span>💵 Cash investi</span><span class="amount blue">$610.00</span></div>
+        <div class="nature-label">Détail</div>
+        <div class="nature-item"><span class="check-blue">✓</span> Cash de départ ($410)</div>
+        <div class="nature-item"><span class="check-blue">✓</span> Alcool ($200)</div>
+        <div class="nature-item"><span class="check-blue">✓</span> Local · Igloo · Table</div>
+        <div class="progress-bar mt-8"><div class="progress-fill blue" style="width:40%"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header-row"><span style="font-size:15px;font-weight:800">👩 Nataïla</span><span class="badge badge-green">40%</span></div>
         <div class="list-item"><span>💵 Cash investi</span><span class="amount green">$900.00</span></div>
         <div class="nature-label">Apports en nature</div>
         <div class="nature-item"><span class="check-green">✓</span> Achats au marché</div>
         <div class="nature-item"><span class="check-green">✓</span> Savoir-faire sirops</div>
         <div class="nature-item"><span class="check-green">✓</span> Vente Fresco</div>
-        <div class="progress-bar mt-8"><div class="progress-fill green" style="width:50%"></div></div>
+        <div class="progress-bar mt-8"><div class="progress-fill green" style="width:40%"></div></div>
+      </div>
+    </section>
+    <section id="tab-apports-old" class="hidden">
+      <div class="card">
+        <div class="card-header-row"><span style="font-size:15px;font-weight:800">👩 Nataïla</span><span class="badge badge-green">50%</span></div>
+        <div class="list-item"><span>💵 Cash investi</span><span class="amount green">$900.00</span></div>
+        <div class="nature-label">Apports en nature</div>
+        <div class="nature-item"><span class="check-green">✓</span> Achats au marché</div>
+        <div class="progress-bar mt-8"><div class="progress-fill green" style="width:40%"></div></div>
       </div>
     </section>
 
@@ -248,16 +270,17 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1e293b;min-h
       <div class="alert alert-green hidden" id="rep-alert-pos">✅ Bénéfice à répartir : <strong id="rep-benefice">$0.00</strong></div>
       <div class="card">
         <div class="card-label">Parts — Coupe du Monde 2026</div>
-        <div class="rep-bar"><div class="rep-bar-stefi">50%</div><div class="rep-bar-nataila">50%</div></div>
+        <div class="rep-bar"><div class="rep-bar-steve">20%</div><div class="rep-bar-fige">40%</div><div class="rep-bar-nataila">40%</div></div>
         <div class="rep-legend">
-          <div class="legend-item"><div class="legend-dot blue"></div>Steve & Figeline</div>
+          <div class="legend-item"><div class="legend-dot blue"></div>Steve</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#D97706"></div>Fige</div>
           <div class="legend-item"><div class="legend-dot green"></div>Nataïla</div>
         </div>
       </div>
       <div id="rep-table"></div>
       <div class="card">
         <div class="card-label">Résumé</div>
-        <div class="list-item"><span>Total investi</span><span class="amount yellow" id="rep-investi">$1,310.00</span></div>
+        <div class="list-item"><span>Total investi</span><span class="amount yellow" id="rep-investi">$1,510.00</span></div>
         <div class="list-item"><span>Total dépenses</span><span class="amount red" id="rep-depenses">$0.00</span></div>
         <div class="list-item"><span>Total encaissé</span><span class="amount blue" id="rep-recettes">$0.00</span></div>
         <div class="list-item" style="border-top:2px solid #E2E8F0;margin-top:4px;padding-top:12px"><span><strong>Bénéfice net</strong></span><span class="amount" id="rep-net">$0.00</span></div>
@@ -300,7 +323,7 @@ const SUPABASE_URL='https://darzhfamxnycdglcglgg.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhcnpoZmFteG55Y2RnbGNnbGdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNDUzNjcsImV4cCI6MjA5NTkyMTM2N30.uHMDHR4df8oYGIqLonLwAgEDzzdu1s7yj7VWtp3KUBQ';
 const ENTREPRISE_ID='cc0bec95-bcf1-46ac-a364-dc63bb22a2e5';
 const ADMIN_PIN='1379';
-const CATEGORIES={'Sirops & Ingrédients':['Esans','Menthe','Siwo Anana','Siwo Grenadin','Siwo Frèz','Siwo Oranj','Kanèl','Chalimo','Jenjanm','Kokoye','Ani Etwale','Koloran','Sik Blan','Sik Krèm'],'Emballages':['Cup 4oz','Cup 5oz','Cup 6oz','Cup 16oz'],'Logistique':['Glas','Gazoline','Transport','Affiche'],'Autre':['Autre (à préciser)']};
+const CATEGORIES={'Sirops & Ingrédients':['Esans','Menthe','Siwo Anana','Siwo Grenadin','Siwo Frèz','Siwo Oranj','Kanèl','Chalimo','Jenjanm','Kokoye','Ani Etwale','Koloran','Sik Blan','Sik Krèm'],'Emballages':['Cup 4oz','Cup 5oz','Cup 6oz','Cup 16oz'],'Logistique':['Glas','Gazoline','Transport','Affiche','Alcool'],'Autre':['Autre (à préciser)']};
 let depenses=[],recettes=[],modalCallback=null,isAdmin=false;
 const fmt=n=>'$'+Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
 const fmtDate=iso=>{if(!iso)return'';const d=new Date(iso);return d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})};
@@ -337,12 +360,12 @@ function rafraichir(){
   if(dl){if(depenses.length===0){dl.innerHTML='<div class="empty">Aucune dépense.</div>'}else{const g={};depenses.forEach(d=>{const c=d.categorie||'Autre';if(!g[c])g[c]=[];g[c].push(d)});let h='',n=1;for(const[c,items]of Object.entries(g)){const st=items.reduce((s,d)=>s+Number(d.montant),0);h+=`<div class="cat-header">${c}<span class="cat-total">${fmt(st)}</span></div><table class="data-table"><thead><tr><th>#</th><th>Description</th><th>Date & Heure</th><th>Montant</th><th></th></tr></thead><tbody>${items.map(d=>`<tr><td class="num-col">${n++}</td><td>${d.label}${d.preciser?`<br><small class="hint">${d.preciser}</small>`:''}</td><td class="date-col">${fmtDate(d.created_at)}</td><td class="amount red">${fmt(d.montant)}</td><td>${isAdmin?`<button class="btn-sm" onclick="confirmerSupp('dep','${d.id}')">✕</button>`:''}</td></tr>`).join('')}</tbody></table>`}h+=`<div class="total-bar">TOTAL : ${fmt(tD)}</div>`;dl.innerHTML=h}}
   set('rec-total',fmt(tR));
   const rl=document.getElementById('rec-list');if(rl){if(recettes.length===0){rl.innerHTML='<div class="empty">Aucune recette.</div>'}else{rl.innerHTML=`<table class="data-table"><thead><tr><th>#</th><th>Description</th><th>Date & Heure</th><th>Montant</th><th></th></tr></thead><tbody>${[...recettes].reverse().map((r,i)=>`<tr><td class="num-col">${i+1}</td><td>${r.label}</td><td class="date-col">${fmtDate(r.created_at)}</td><td class="amount green">+${fmt(r.montant)}</td><td>${isAdmin?`<button class="btn-sm" onclick="confirmerSupp('rec','${r.id}')">✕</button>`:''}</td></tr>`).join('')}</tbody><tfoot><tr><td colspan="3"><strong>TOTAL</strong></td><td class="amount green"><strong>+${fmt(tR)}</strong></td><td></td></tr></tfoot></table>`}}
-  const pS=bn>0?bn*0.5:0,pN=bn>0?bn*0.5:0;
+  const pS=bn>0?bn*0.20:0,pF=bn>0?bn*0.40:0,pN=bn>0?bn*0.40:0;
   document.getElementById('rep-alert-neg').classList.toggle('hidden',bn>0);
   document.getElementById('rep-alert-pos').classList.toggle('hidden',bn<=0);
   if(bn>0)set('rep-benefice',fmt(bn));else{const el=document.getElementById('rep-reste-txt');if(el)el.textContent=`Il reste ${fmt(Math.abs(bn))} à récupérer.`}
-  const rt=document.getElementById('rep-table');if(rt)rt.innerHTML=`<div class="card"><table class="data-table"><thead><tr><th>Associé</th><th>Part</th><th>Cash</th><th>Bénéfice</th></tr></thead><tbody><tr><td>👫 Steve & Figeline</td><td><span class="badge badge-blue">50%</span></td><td class="amount blue">$410.00</td><td class="amount ${bn>0?'green':''}">${fmt(pS)}</td></tr><tr><td>👩 Nataïla</td><td><span class="badge badge-green">50%</span></td><td class="amount green">$900.00</td><td class="amount ${bn>0?'green':''}">${fmt(pN)}</td></tr></tbody><tfoot><tr><td colspan="3"><strong>Bénéfice net</strong></td><td class="amount" style="color:${cb}"><strong>${fmt(bn)}</strong></td></tr></tfoot></table></div>`;
-  set('rep-investi',fmt(1310));set('rep-depenses',fmt(tD));set('rep-recettes',fmt(tR));set('rep-net',fmt(bn),cb);
+  const rt=document.getElementById('rep-table');if(rt)rt.innerHTML=`<div class="card"><table class="data-table"><thead><tr><th>Associé</th><th>Part</th><th>Cash</th><th>Bénéfice</th></tr></thead><tbody><tr><td>🧑 Steve</td><td><span class="badge badge-blue">20%</span></td><td class="amount blue">$0.00</td><td class="amount ${bn>0?'green':''}">${fmt(pS)}</td></tr><tr><td>👩 Fige</td><td><span class="badge" style="background:#FEF3C7;color:#D97706">40%</span></td><td class="amount" style="color:#D97706">$610.00</td><td class="amount ${bn>0?'green':''}">${fmt(pF)}</td></tr><tr><td>👩 Nataïla</td><td><span class="badge badge-green">40%</span></td><td class="amount green">$900.00</td><td class="amount ${bn>0?'green':''}">${fmt(pN)}</td></tr></tbody><tfoot><tr><td colspan="3"><strong>Bénéfice net</strong></td><td class="amount" style="color:${cb}"><strong>${fmt(bn)}</strong></td></tr></tfoot></table></div>`;
+  set('rep-investi',fmt(1510));set('rep-depenses',fmt(tD));set('rep-recettes',fmt(tR));set('rep-net',fmt(bn),cb);
 }
 function ouvrirFormDep(){if(!isAdmin){showPinModal();return}document.getElementById('form-depense').classList.toggle('hidden')}
 function ouvrirFormRec(){if(!isAdmin){showPinModal();return}document.getElementById('form-recette').classList.toggle('hidden')}
@@ -363,9 +386,19 @@ function closeModal(){document.getElementById('modal').classList.add('hidden');m
 function setSyncing(on){document.getElementById('syncStatus').classList.toggle('spinning',on)}
 function set(id,text,color=null){const el=document.getElementById(id);if(!el)return;el.textContent=text;if(color)el.style.color=color}
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.remove('hidden');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.add('hidden'),2800)}
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;});
+function installerApp(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(c=>{ if(c.outcome==='accepted') toast('✅ Application installée'); deferredPrompt=null; });
+  } else {
+    toast('📲 Menu navigateur → "Ajouter à l\'écran d\'accueil"');
+  }
+}
 function exporterCSV(){
   const tD=depenses.reduce((s,d)=>s+Number(d.montant),0),tR=recettes.reduce((s,r)=>s+Number(r.montant),0),bn=tR-tD;
-  let csv='SteFi Salon - Pression STOP\nCoupe du Monde 2026 (13 juin - 19 juillet)\n\n';
+  let csv='SteFi Salon - Mondyal Frechè\nCoupe du Monde 2026 (13 juin - 19 juillet)\n\n';
   csv+='=== RESUME ===\n';
   csv+=`Total investi,$${(1310).toFixed(2)}\n`;
   csv+=`Total depenses,$${tD.toFixed(2)}\n`;
@@ -390,6 +423,7 @@ function exporterCSV(){
   toast('⬇️ Fichier téléchargé');
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!document.getElementById('pin-modal').classList.contains('hidden'))verifierPin()});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 </script>
 </body>
 </html>
